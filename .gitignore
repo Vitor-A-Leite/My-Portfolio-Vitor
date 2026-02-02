@@ -1,5 +1,15 @@
-venv/
+# macOS
+.DS_Store
+
+# Python / Django
 __pycache__/
-db.sqlite3
+*.pyc
+*.pyo
+*.pyd
 .env
+venv/
+db.sqlite3
 staticfiles/
+
+# VS Code
+.vscode/
