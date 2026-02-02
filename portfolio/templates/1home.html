@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Vitor Augusto Leite{% endblock %}
+{% block content %}
+    <section>
+        <h2>About me</h2>
+        <img src="{% static 'portfolio/photo.jpg' %}" alt="My Photo">
+        <p>{{ Profile.Summary }}</p>
+    </section>
+    <section>
+        <h2>Education</h2>
+        <ul>
+        {% for education in Education %}
+            <li><strong>{{ education.Institution }}</strong> - {{ education.Degree }} in {{ education.Field }}</li>
+        {% endfor %}
+        </ul>
+    </section>
+    <section>
+        <h2>Experiences</h2>
+        <ul>
+        {% for experience in Experience %}
+            <li><strong>{{ experience.Company }}</strong> - {{ experience.Role }}</li>
+            <i>{{ experience.StartDate }} - {{ experience.EndDate }}</i>
+            <ul>
+            {% for responsibility in experience.Responsibilities %}
+                <li>{{ responsibility }}</li>
+            {% endfor %}
+            </ul>
+        {% endfor %}
+        </ul>
+    </section>
+    <section>
+        <h2>Hard Skills</h2>
+        <ul>
+        {% for type, skills_list in skills.items %}
+            <h3>{{ type }}:</h3>
+            <ul>
+            {% for skill in skills_list %}
+                <li>{{ skill }}</li>
+            {% endfor %}
+            </ul>
+        {% endfor %}
+        </ul>
+    </section>
+        <section>
+        <h2>Soft Skills</h2>
+        <ul>
+        {% for skill in SoftSkills %}
+            <li>{{ skill }}</li>
+        {% endfor %}
+        </ul>
+    </section>
+    <section>
+        <h2>Contact</h2>
+        <ul>
+        {% for key, value in Profile.Contact.items %}
+        {% if value %}
+            {% if key == "LinkedIn" %}
+                <li><strong>{{ key }}:</strong> <a href="{{ value }}">My LinkedIn</a></li>
+            {% else %}
+                <li><strong>{{ key }}:</strong> {{ value }}</li>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Vitor Augusto Leite{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="hero-badge">
+                <span class="status-dot"></span>
+                Available for opportunities
+            </div>
+            <h1 class="hero-title">
+                Hi, I'm <span>Vitor</span><br>
+                Engineering Student
+            </h1>
+            <p class="hero-description">
+                {{ Profile.Summary }}
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'projects' %}" class="btn btn-primary">
+                    View Projects
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#contact" class="btn btn-secondary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="M22 6l-10 7L2 6"/>
+                    </svg>
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'portfolio/photo.png' %}" alt="Vitor Augusto Leite" class="hero-photo">
+            <div class="hero-image-decoration"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Education Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Education</h2>
+        <p class="section-subtitle">My academic journey and continuous learning</p>
+    </div>
+    <div class="education-grid">
+        {% for education in Education %}
+        <div class="education-card">
+            <div class="education-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+            </div>
+            <h3 class="education-institution">{{ education.Institution }}</h3>
+            <p class="education-degree">{{ education.Degree }}</p>
+            <p class="education-field">{{ education.Field }}</p>
+            {% if education.Status == "InProgress" %}
+            <span class="education-status">
+                <span class="status-dot"></span>
+                In Progress {% if education.EndYear %}· Expected {{ education.EndYear }}{% endif %}
+            </span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Experience</h2>
+        <p class="section-subtitle">Professional journey and key accomplishments</p>
+    </div>
+    <div class="experience-timeline">
+        {% for experience in Experience %}
+        <div class="experience-item">
+            <div class="experience-dot"></div>
+            <div class="experience-card">
+                <div class="experience-header">
+                    <div>
+                        <h3 class="experience-company">{{ experience.Company }}</h3>
+                        <p class="experience-role">{{ experience.Role }}</p>
+                    </div>
+                    <span class="experience-date">{{ experience.StartDate }} — {{ experience.EndDate }}</span>
+                </div>
+                <ul class="experience-responsibilities">
+                    {% for responsibility in experience.Responsibilities %}
+                    <li>{{ responsibility }}</li>
+                    {% endfor %}
+                </ul>
+                <div class="experience-tags">
+                    {% for tag in experience.Tags %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Hard Skills Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Technical Skills</h2>
+        <p class="section-subtitle">Tools and technologies I work with</p>
+    </div>
+    <div class="skills-grid">
+        {% for category, skill_data in skills.items %}
+        <div class="skill-category">
+            <h3 class="skill-category-title">{{ category }}</h3>
+            <div class="skill-items">
+                {% if skill_data.items %}
+                    {% for key, value in skill_data.items %}
+                        {% if value.items %}
+                            {% for sub_key, sub_value in value.items %}
+                                {% if sub_value.append %}
+                                    {% for item in sub_value %}
+                                    <span class="skill-item">{{ item }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="skill-item">{{ sub_key }}: {{ sub_value }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span class="skill-item">{{ key }}: {{ value }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% for skill in skill_data %}
+                    <span class="skill-item">{{ skill }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Soft Skills Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Soft Skills</h2>
+        <p class="section-subtitle">Personal qualities that drive collaboration and success</p>
+    </div>
+    <div class="soft-skills-grid">
+        {% for skill in SoftSkills %}
+        <span class="soft-skill">{{ skill }}</span>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Featured Projects Preview -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-subtitle">A selection of my recent work</p>
+    </div>
+    <div class="projects-grid">
+        {% for key, project in Projects.items %}
+        {% if forloop.counter <= 3 %}
+        <article class="project-card">
+            <div class="project-image">
+                <svg class="project-image-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V9C21 7.89543 20.1046 7 19 7H13L11 5H5C3.89543 5 3 5.89543 3 7Z"/>
+                </svg>
+            </div>
+            <div class="project-content">
+                <h3 class="project-title">{{ project.Name }}</h3>
+                <p class="project-description">{{ project.Description }}</p>
+                <div class="project-tech">
+                    {% for tech in project.Technologies %}
+                    <span class="tech-tag">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{{ project.Link }}" target="_blank" rel="noopener noreferrer" class="project-link">
+                    View on GitHub
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
+            </div>
+        </article>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: var(--spacing-2xl);">
+        <a href="{% url 'projects' %}" class="btn btn-secondary">
+            View All Projects
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
+</section>
+{% endblock %}

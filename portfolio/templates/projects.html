@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Projects - Vitor Augusto Leite{% endblock %}
+{% block nav_projects %}active{% endblock %}
+
+{% block content %}
+<!-- Projects Hero -->
+<section class="projects-hero">
+    <h1 class="projects-hero-title">My Projects</h1>
+    <p class="projects-hero-description">
+        A collection of projects showcasing my skills in programming, 
+        data science, web development, and engineering.
+    </p>
+</section>
+
+<!-- Projects Grid -->
+<section class="section" style="padding-top: 0;">
+    <div class="projects-grid">
+        {% for key, project in Projects.items %}
+        <article class="project-card">
+            <div class="project-image">
+                <svg class="project-image-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    {% if 'Django' in project.Technologies %}
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                    <path d="M2 17L12 22L22 17"/>
+                    <path d="M2 12L12 17L22 12"/>
+                    {% elif 'Python' in project.Technologies %}
+                    <path d="M12 9H7.5A2.5 2.5 0 0 1 5 6.5V6A3 3 0 0 1 8 3H16A3 3 0 0 1 19 6V6.5A2.5 2.5 0 0 1 16.5 9H12Z"/>
+                    <path d="M12 15H16.5A2.5 2.5 0 0 1 19 17.5V18A3 3 0 0 1 16 21H8A3 3 0 0 1 5 18V17.5A2.5 2.5 0 0 1 7.5 15H12Z"/>
+                    <line x1="12" y1="9" x2="12" y2="15"/>
+                    <circle cx="9" cy="6" r="1"/>
+                    <circle cx="15" cy="18" r="1"/>
+                    {% elif 'Control' in project.Description %}
+                    <path d="M12 2V6M12 18V22M6 12H2M22 12H18"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93"/>
+                    {% else %}
+                    <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V9C21 7.89543 20.1046 7 19 7H13L11 5H5C3.89543 5 3 5.89543 3 7Z"/>
+                    {% endif %}
+                </svg>
+            </div>
+            <div class="project-content">
+                <h3 class="project-title">{{ project.Name }}</h3>
+                <p class="project-description">{{ project.Description }}</p>
+                <div class="project-tech">
+                    {% for tech in project.Technologies %}
+                    <span class="tech-tag">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{{ project.Link }}" target="_blank" rel="noopener noreferrer" class="project-link">
+                    View on GitHub
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Back to Home -->
+<section class="section" style="text-align: center; padding-top: 0;">
+    <a href="{% url 'home' %}" class="btn btn-secondary">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Home
+    </a>
+</section>
+{% endblock %}
