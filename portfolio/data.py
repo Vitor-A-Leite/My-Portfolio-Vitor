@@ -1,162 +1,150 @@
-# portfolio_data.py
+from .models import (
+    Education as EducationModel,
+    Experience as ExperienceModel,
+    Languages as LanguagesModel,
+    Profile as ProfileModel,
+    Projects as ProjectsModel,
+    Skills as SkillsModel,
+    SoftSkills as SoftSkillsModel,
+)
 
-Profile = {
-    "Summary":
-            "I am a Mechanical Engineering student with a strong focus on software development, artificial intelligence, and engineering problem-solving. I am actively seeking opportunities in development- and engineering-oriented roles where I can apply programming, data analysis, and AI to solve complex, real-world problems.\nMy background combines solid engineering fundamentals with hands-on experience in programming, simulation, and data-driven decision-making. I work comfortably with technologies such as Python, data analysis tools, automation workflows, and AI models, using them to optimize processes, build intelligent systems, and transform technical challenges into practical solutions.\nI am particularly motivated by roles that demand structured thinking, system design, and continuous learning. I approach problems analytically, break them down into manageable components, and develop efficient, scalable solutions by combining engineering logic with modern software and AI technologies. \nDriven, adaptable, and highly curious, I aim to grow as a development and engineering professional while contributing to innovative teams that value technology, efficiency, and intelligent problem-solving.",
-    "Contact": {
-        "Email": "vitoraleite.1@gmail.com",
-        "College email": "vitor.leite@ufpr.br",
-        "Phone": "+55 44 98833-5833",
-        "LinkedIn": "https://www.linkedin.com/in/vitor-augusto-leite-bb60111b8?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B0UsZFFSsSpuLMYBlLFtoKA%3D%3D",
-    },
-}
 
-Education = [
-    {
-        "Institution": "Universidade Federal do Paraná (UFPR)",
-        "Degree": "Bachelor's Degree",
-        "Field": "Mechanical Engineering",
-        "Status": "InProgress",
-        "StartYear": None,
-        "EndYear": "Dec 2027",
-    },
-    {
-        "Institution": "Asimov Academy",
-        "Degree": "Professional Training",
-        "Field": "Data Science, Programming and Automation",
-        "Status": "InProgress",
-        "StartYear": None,
-        "EndYear": None,
-    },
-    {
-        "Institution": "Udemy",
-        "Degree": "Online Courses",
-        "Field": "Programming, Data Science, Web Development and Engineering",
-        "Status": "InProgress",
-        "StartYear": None,
-        "EndYear": None,
-    },
-]
+def _format_month_year(value):
+    if not value:
+        return None
+    if hasattr(value, "strftime"):
+        return value.strftime("%b %Y")
+    return str(value)
 
-Experience = [
-    {
-        "Company": "Volvo do Brasil",
-        "Role": "Simulation Engineering Intern",
-        "StartDate": "2024-07",
-        "EndDate": "2025-05",
-        "Responsibilities": [
-            "Performed modal, structural and durability analyses using HyperMesh, NCODE and proprietary Volvo tools",
-            "Developed analytical engineering reports supporting product development decisions",
-            "Conducted component analyses for South American and North American markets",
-            "Assisted in the development of macros to improve HyperMesh efficiency",
-        ],
-        "Tags": ["FEA", "Simulation", "Structural Analysis", "Automation"],
-    },
-    {
-        "Company": "Volvo do Brasil",
-        "Role": "Services and Digital Development Intern",
-        "StartDate": "2024-07",
-        "EndDate": "2024-09",
-        "Responsibilities": [
-            "Developed telemetry and fuel economy digital services",
-            "Created KPI dashboards using Power BI",
-            "Built automations using Power Automate",
-            "Produced training materials and after-sales presentations",
-            "Modeled administrative processes using Microsoft Visio and VBA",
-        ],
-        "Tags": ["Data Science", "Power BI", "Automation", "Digital Services"],
-    },
-    {
-        "Company": "COEM Jr. – Junior Mechanical Engineering Consultancy",
-        "Role": "Project Manager",
-        "StartDate": "2023-01",
-        "EndDate": "2023-07",
-        "Responsibilities": [
-            "Led the development of a sonar stabilizer for drowning victim identification",
-            "Managed multidisciplinary teams using Scrum and Kanban",
-            "Designed a corner polisher in SolidWorks",
-            "Validated designs using finite element analysis with Ansys Workbench",
-        ],
-        "Tags": ["Leadership", "ProjectManagement", "CAD", "FEA"],
-    },
-]
 
-skills = {
-    "Languages": {
-        "Portuguese": "Native",
-        "English": "Advanced",
-        "Spanish": "Intermediate",
-    },
-    "Python": {
-        "Libraries": "Pandas, NumPy, Matplotlib, Machine Learning",
-        "Frameworks": "Django, Langchain",
-    },
-    "Web Development": {
-        "Language": "JavaScript, PHP",
-        "Technologies": "HTML, CSS, HTTP",
+def _split_text_list(value):
+    if not value:
+        return []
+
+    cleaned = value.replace("\r", "\n")
+    if "\n" in cleaned:
+        raw_items = cleaned.split("\n")
+    elif ";" in cleaned:
+        raw_items = cleaned.split(";")
+    else:
+        raw_items = cleaned.split(",")
+
+    return [item.strip(" -•\t") for item in raw_items if item.strip()]
+
+
+def _split_csv(value):
+    if not value:
+        return []
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def get_profile_data():
+    profile_instance = ProfileModel.objects.first()
+    summary = profile_instance.summary if profile_instance else "Summary not available"
+    email = profile_instance.email if profile_instance else "Email not available"
+    college_email = profile_instance.college_email if profile_instance else "College email not available"
+    phone = profile_instance.phone if profile_instance else "Phone not available"
+    linkedin = profile_instance.linkedin if profile_instance else "LinkedIn not available"
+    profile_picture = profile_instance.profile_picture.url if profile_instance and profile_instance.profile_picture else None
+
+    return {
+        "Summary": summary,
+        "ProfilePicture": profile_picture,
+        "Contact": {
+            "Email": email,
+            "College email": college_email,
+            "Phone": phone,
+            "LinkedIn": linkedin,
         },
-    "Data": {
-        "Data Analysis": True,
-        "Power BI": "Advanced",
-        "Excel": "Intermediate",
-        "Machine Learning": "Regression, Classification"
-    },
-    "Engineering Tools": [
-        "Hypermesh FEA Software",
-        "NCODE",
-        "Ansys Workbench",
-        "SolidWorks",
-        "Catia"
-    ],
-    "Productivity Tools": [
-        "Microsof Office",
-        "Microsoft Visio",
-        "Jira",
-    ],
-    "Version Control": {
-        "Git": "Intermediate",
-        "GitHub": "Intermediate",
-    },
-}
+    }
 
-SoftSkills = [
-    "Oratory",
-    "Time Management",
-    "Proactivity",
-    "Analytical Thinking",
-    "Team Leadership",
-    "Effective Communication",
-]
 
-Projects = {
-    'Project 1': {
-        'Name': 'Site MAVD Ingredients',
-        'Description': 'A website developed using Django to showcase MAVD Ingredients products and services.',
-        'Technologies': ['Django', 'HTML', 'CSS', 'JavaScript'],
-        'Link': 'To be updated soon'
-    },
-        'Project 2': {
-        'Name': 'Pong Game',
-        'Description': 'A software developed using turtle to showcase a Pong game.',
-        'Technologies': ['POO', 'Python', 'Turtle'],
-        'Link': 'https://github.com/Vitor-A-Leite/Snake_Game'
-    },
-    'Project 3': {
-        'Name': 'Blackjack Game',
-        'Description': 'A functional app developed to showcase the Blackjack game.',
-        'Technologies': ['Django', 'HTML', 'CSS', 'JavaScript'],
-        'Link': 'https://github.com/Vitor-A-Leite/Blackjack_Game'
-    },
-    'Project 4': {
-        'Name': 'Coffee Machine Simulator',
-        'Description': 'A functional app developed to simulate a coffee machine.',
-        'Technologies': ['POO', 'Python'],
-        'Link': 'https://github.com/Vitor-A-Leite/Coffee_Machine_Software'
-    },
-    'Project 5': {
-        'Name': 'Modeling and PID Control of Quarter Car Suspension System',
-        'Description': 'A project developed to model and control a quarter car suspension system using PID control for a college assignment.',
-        'Technologies': ['Control Library', 'Python', 'Matplotlib', 'NumPy', 'Jupyter Notebook'],
-        'Link': 'https://github.com/Vitor-A-Leite/Control-System-Fundaments-Assignment'
-    },
-}
+def get_education_data():
+    return [
+        {
+            "Institution": education.institution,
+            "Degree": education.degree,
+            "Field": education.field,
+            "Status": education.status,
+            "StartYear": _format_month_year(education.start_year),
+            "EndYear": _format_month_year(education.end_year),
+        }
+        for education in EducationModel.objects.all()
+    ]
+
+
+def get_experience_data():
+    return [
+        {
+            "Company": experience.company,
+            "Role": experience.role,
+            "StartDate": experience.start_date.strftime("%Y-%m") if experience.start_date else None,
+            "EndDate": experience.end_date.strftime("%Y-%m") if experience.end_date else "Present",
+            "Responsibilities": _split_text_list(experience.responsibilities),
+            "Tags": _split_csv(experience.tags),
+        }
+        for experience in ExperienceModel.objects.all()
+    ]
+
+
+def get_skills_data():
+    return {
+        "Technical": [
+            {
+                "Name": skill.name,
+                "Description": skill.description,
+            }
+            for skill in SkillsModel.objects.all()
+        ],
+        "Languages": [
+            {
+                "Name": language.name,
+                "Proficiency": language.proficiency,
+            }
+            for language in LanguagesModel.objects.all()
+        ],
+    }
+
+
+def get_soft_skills_data():
+    return [
+        {
+            "Name": soft_skill.name,
+            "Description": soft_skill.description,
+        }
+        for soft_skill in SoftSkillsModel.objects.all()
+    ]
+
+
+def get_projects_data():
+    return {
+        f"Project {index}": {
+            "Name": project.name,
+            "Description": project.description,
+            "Technologies": _split_csv(project.technologies),
+            "Link": project.link,
+            "Image": project.project_image.url if project.project_image else None,
+        }
+        for index, project in enumerate(ProjectsModel.objects.all(), start=1)
+    }
+
+
+def get_home_context():
+    profile_data = get_profile_data()
+    return {
+        "skills": get_skills_data(),
+        "Profile": profile_data,
+        "Contact": profile_data["Contact"],
+        "Education": get_education_data(),
+        "Experience": get_experience_data(),
+        "SoftSkills": get_soft_skills_data(),
+        "Projects": get_projects_data(),
+    }
+
+
+def get_projects_context():
+    profile_data = get_profile_data()
+    return {
+        "Projects": get_projects_data(),
+        "Contact": profile_data["Contact"],
+    }

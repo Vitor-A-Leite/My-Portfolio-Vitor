@@ -36,7 +36,11 @@
             </div>
         </div>
         <div class="hero-image">
+            {% if Profile.ProfilePicture %}
+            <img src="{{ Profile.ProfilePicture }}" alt="Vitor Augusto Leite" class="hero-photo">
+            {% else %}
             <img src="{% static 'portfolio/photo.png' %}" alt="Vitor Augusto Leite" class="hero-photo">
+            {% endif %}
             <div class="hero-image-decoration"></div>
         </div>
     </div>
@@ -112,34 +116,28 @@
         <p class="section-subtitle">Tools and technologies I work with</p>
     </div>
     <div class="skills-grid">
-        {% for category, skill_data in skills.items %}
         <div class="skill-category">
-            <h3 class="skill-category-title">{{ category }}</h3>
+            <h3 class="skill-category-title">Technical</h3>
             <div class="skill-items">
-                {% if skill_data.items %}
-                    {% for key, value in skill_data.items %}
-                        {% if value.items %}
-                            {% for sub_key, sub_value in value.items %}
-                                {% if sub_value.append %}
-                                    {% for item in sub_value %}
-                                    <span class="skill-item">{{ item }}</span>
-                                    {% endfor %}
-                                {% else %}
-                                    <span class="skill-item">{{ sub_key }}: {{ sub_value }}</span>
-                                {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            <span class="skill-item">{{ key }}: {{ value }}</span>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% for skill in skill_data %}
-                    <span class="skill-item">{{ skill }}</span>
-                    {% endfor %}
-                {% endif %}
+                {% for skill in skills.Technical %}
+                <span class="skill-item">
+                    {{ skill.Name }}{% if skill.Description %}: {{ skill.Description }}{% endif %}
+                </span>
+                {% empty %}
+                <span class="skill-item">No technical skills registered yet.</span>
+                {% endfor %}
             </div>
         </div>
-        {% endfor %}
+        <div class="skill-category">
+            <h3 class="skill-category-title">Languages</h3>
+            <div class="skill-items">
+                {% for language in skills.Languages %}
+                <span class="skill-item">{{ language.Name }}: {{ language.Proficiency }}</span>
+                {% empty %}
+                <span class="skill-item">No languages registered yet.</span>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </section>
 
@@ -151,7 +149,11 @@
     </div>
     <div class="soft-skills-grid">
         {% for skill in SoftSkills %}
-        <span class="soft-skill">{{ skill }}</span>
+        <span class="soft-skill" {% if skill.Description %}title="{{ skill.Description }}"{% endif %}>
+            {{ skill.Name }}
+        </span>
+        {% empty %}
+        <span class="soft-skill">No soft skills registered yet.</span>
         {% endfor %}
     </div>
 </section>
@@ -167,9 +169,13 @@
         {% if forloop.counter <= 3 %}
         <article class="project-card">
             <div class="project-image">
+                {% if project.Image %}
+                <img src="{{ project.Image }}" alt="{{ project.Name }}" class="project-image-img">
+                {% else %}
                 <svg class="project-image-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V9C21 7.89543 20.1046 7 19 7H13L11 5H5C3.89543 5 3 5.89543 3 7Z"/>
                 </svg>
+                {% endif %}
             </div>
             <div class="project-content">
                 <h3 class="project-title">{{ project.Name }}</h3>
@@ -188,6 +194,13 @@
             </div>
         </article>
         {% endif %}
+        {% empty %}
+        <article class="project-card">
+            <div class="project-content">
+                <h3 class="project-title">No projects yet</h3>
+                <p class="project-description">Add projects in the admin panel to display them here.</p>
+            </div>
+        </article>
         {% endfor %}
     </div>
     <div style="text-align: center; margin-top: var(--spacing-2xl);">
